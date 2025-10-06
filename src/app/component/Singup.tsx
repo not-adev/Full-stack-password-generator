@@ -1,0 +1,217 @@
+"use client"
+import React, { Suspense, useEffect, useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Link from 'next/link';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css'; 
+const SignUpForm = React.lazy(() => {
+  return new Promise<typeof import('./SingupForm')>((resolve) => {
+    setTimeout(() => {
+      resolve(import('./SingupForm'));
+    }, 2000); // Simulate 2-second delay
+  });
+});
+
+
+export interface ResFromApi {
+  code: number;
+  message: String;
+}
+
+
+const Sign_up = () => {
+  
+  const route = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [otpGiven, setOtpGiven] = useState(true)
+  const callErrorToast = (e: String) => toast.error(e, { position: "top-center", })
+  const callSucessToast = (e: String) => toast.success(e, { position: "top-center", })
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    OTP: '',
+  });
+  const [OTP, setOTP] = useState('')
+
+
+
+  const validate = () => {
+    const { name, email } = formData;
+
+    // Name must be at least 2 characters
+    if (!name.trim() || name.trim().length < 2) {
+      callErrorToast("Name must be at least 2 characters long");
+      return false;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim() || !emailRegex.test(email)) {
+      callErrorToast("Please enter a valid email");
+      return false;
+    }
+
+  
+
+    // OTP validation (if shown)
+    if (otpGiven && (formData.OTP != OTP)) {
+      callErrorToast("Please enter a valid 4-digit OTP");
+      return false;
+    }
+    return true
+
+
+  }
+  const handleInput = (e: any) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+
+      setLoading(true)
+      if (!otpGiven) {
+        if (validate()) {
+        
+          const randomFourDigit = Math.floor(1000 + Math.random() * 9000);
+          setOTP(randomFourDigit.toString())
+          toast.promise(
+            async () =>
+              await axios.post(`/api/otpVerification`, {
+                email: formData.email,
+                OTP: randomFourDigit,
+              }),
+            {
+              pending: 'processing...',
+              success: 'OTP send successfully 🎉',
+              error: 'OTP cannt be send failed ❌',
+            }
+          );
+
+
+          setOtpGiven(true)
+
+        }
+
+
+        return
+      }
+      if (validate()) {
+        const res = await axios.post<ResFromApi>(`/api/signup`,
+          {
+            name: formData.name,
+            email: formData.email
+
+          })
+        if (res) {
+          callSucessToast("Signup Completed moving to Sign In ")
+        }
+        else {
+          callErrorToast('Some error try again with different credentails')
+        }
+
+      }
+
+    } catch (error: any) {
+      callErrorToast(error)
+      console.log(error)
+    }
+    finally {
+
+
+      setLoading(false)
+
+    }
+  }
+  const handleCheck = () => {
+    return true
+  }
+
+  const sendOTP = () => {
+    return true
+  }
+
+  return (
+
+
+    <>
+      <div className="md:flex h-screen   overflow-y-hidden" >
+        <div className="flex md:absolute items-center bg-amb mt-4 md:mt-0  top-1 left-4 justify-center text-2xl font-bold " >
+
+          <div className='flex  justify-end items-center gap-4' >
+
+
+            <div className='text-2xl mb-4 md:mb-0 font-semibold' >
+              My Logo
+            </div>
+          </div>
+        </div>
+        < div className="w-[359px] md:h-[90%] m-auto  relative flex flex-col justify-center items-center " >
+
+          <div className="text-center flex flex-col " >
+            <div>
+              <div className=' text-[30px] font-bold md:text-left px-6' >
+                Sign Up
+              </div>
+              < div className='text-gray-400 pt-1 h-[27px] md:text-left px-6' >
+                Sign up to enjoy the feature of HD
+              </div>
+            </div>
+            < Suspense fallback={
+              < div className="w-[359px] mx-auto mt-1 text-sm p-6 bg-white rounded-lg space-y-6" >
+                <Skeleton height={40} />
+                < Skeleton height={40} />
+                <Skeleton height={40} />
+                < Skeleton height={54} />
+              </div>
+            }
+            >
+              <SignUpForm
+                handleSubmit={handleSubmit}
+                handleInput={handleInput}
+                formData={formData}
+                otpGiven={otpGiven}
+                loading={loading}
+                handleCheck={handleCheck}
+                sendOTP={sendOTP}
+                maxAge={true} />
+
+
+
+            </Suspense>
+
+
+
+
+          </div>
+
+        </div>
+
+
+        < div className="w-2/3 hidden  h-screen rounded-2xl p-1 bg-white md:flex items-center justify-center" >
+          <img
+            src="https://i.pinimg.com/1200x/47/da/2d/47da2d09a9bb2394dd764adc789ab193.jpg"
+            alt="Sample Image"
+            className="max-w-full h-full object-cover rounded shadow-lg"
+          />
+        </div>
+      </div >
+      < ToastContainer />
+    </>
+  );
+};
+export default Sign_up;
+
+
+
+
