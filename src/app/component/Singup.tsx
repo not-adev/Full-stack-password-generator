@@ -6,7 +6,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css'; 
+import 'react-loading-skeleton/dist/skeleton.css';
 const SignUpForm = React.lazy(() => {
   return new Promise<typeof import('./SingupForm')>((resolve) => {
     setTimeout(() => {
@@ -19,18 +19,19 @@ const SignUpForm = React.lazy(() => {
 export interface ResFromApi {
   code: number;
   message: String;
+  redirect : string;
 }
 
 
 const Sign_up = () => {
-  
+
   const route = useRouter()
   const [loading, setLoading] = useState(false)
-  const [otpGiven, setOtpGiven] = useState(true)
+  const [otpGiven, setOtpGiven] = useState(false)
   const callErrorToast = (e: String) => toast.error(e, { position: "top-center", })
   const callSucessToast = (e: String) => toast.success(e, { position: "top-center", })
   const [formData, setFormData] = useState({
-    name: '',
+    password: '',
     email: '',
     OTP: '',
   });
@@ -39,14 +40,10 @@ const Sign_up = () => {
 
 
   const validate = () => {
-    const { name, email } = formData;
+    const { password, email } = formData;
 
     // Name must be at least 2 characters
-    if (!name.trim() || name.trim().length < 2) {
-      callErrorToast("Name must be at least 2 characters long");
-      return false;
-    }
-
+    
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim() || !emailRegex.test(email)) {
@@ -54,11 +51,11 @@ const Sign_up = () => {
       return false;
     }
 
-  
+
 
     // OTP validation (if shown)
     if (otpGiven && (formData.OTP != OTP)) {
-      callErrorToast("Please enter a valid 4-digit OTP");
+      callErrorToast("Please enter a valid  OTP");
       return false;
     }
     return true
@@ -67,11 +64,13 @@ const Sign_up = () => {
   }
   const handleInput = (e: any) => {
     const { name, value } = e.target;
+   
     setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
 
+    console.log(formData)
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -82,22 +81,29 @@ const Sign_up = () => {
       setLoading(true)
       if (!otpGiven) {
         if (validate()) {
-        
-          const randomFourDigit = Math.floor(1000 + Math.random() * 9000);
-          setOTP(randomFourDigit.toString())
-          toast.promise(
-            async () =>
-              await axios.post(`/api/otpVerification`, {
-                email: formData.email,
-                OTP: randomFourDigit,
-              }),
-            {
-              pending: 'processing...',
-              success: 'OTP send successfully 🎉',
-              error: 'OTP cannt be send failed ❌',
-            }
-          );
 
+          // toast.promise(
+          //   async () => {
+          //     const response = await axios.post('/api/otpVerification', {
+          //       email: formData.email,
+          //     })
+
+          //     // Extract data from response
+          //     const { otp } = response.data
+
+          //     // You can use this data for further logic if needed
+          //     console.log('OTP:', otp)
+          //     setOTP(otp)
+
+          //     return response.data
+          //   },
+          //   {
+          //     pending: 'Processing...',
+          //     success: 'OTP sent successfully 🎉',
+          //     error: 'OTP could not be sent ❌',
+          //   }
+          // )
+          setOTP('123')
 
           setOtpGiven(true)
 
@@ -107,18 +113,15 @@ const Sign_up = () => {
         return
       }
       if (validate()) {
-        const res = await axios.post<ResFromApi>(`/api/signup`,
+        console.log(formData.password)
+        const res = await axios.post<ResFromApi>(`/api/Signup`,
           {
-            name: formData.name,
+            password: formData.password,
             email: formData.email
 
           })
-        if (res) {
-          callSucessToast("Signup Completed moving to Sign In ")
-        }
-        else {
-          callErrorToast('Some error try again with different credentails')
-        }
+       callErrorToast(res.data.message)
+       route.push(res.data.redirect)
 
       }
 
@@ -133,12 +136,31 @@ const Sign_up = () => {
 
     }
   }
-  const handleCheck = () => {
-    return true
-  }
+
 
   const sendOTP = () => {
-    return true
+    toast.promise(
+      async () => {
+        const response = await axios.post('/api/otpVerification', {
+          email: formData.email,
+        })
+
+        // Extract data from response
+        const { otp } = response.data
+
+        // You can use this data for further logic if needed
+        console.log('OTP:', otp)
+        setOTP(otp)
+
+        return response.data
+      },
+      {
+        pending: 'Processing...',
+        success: 'OTP sent successfully 🎉',
+        error: 'OTP could not be sent ❌',
+      }
+    )
+
   }
 
   return (
@@ -182,7 +204,7 @@ const Sign_up = () => {
                 formData={formData}
                 otpGiven={otpGiven}
                 loading={loading}
-                handleCheck={handleCheck}
+             
                 sendOTP={sendOTP}
                 maxAge={true} />
 

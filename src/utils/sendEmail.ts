@@ -2,7 +2,6 @@ import nodemailer from 'nodemailer';
 
 interface EmailOptions {
     to: string;
-    subject: string;
     otp: string;
 }
 

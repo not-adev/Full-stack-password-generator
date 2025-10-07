@@ -3,13 +3,12 @@ import React, { useState } from 'react'
 interface SignUpFormProps {
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleCheck: (e: React.ChangeEvent<HTMLInputElement>) => void;
     sendOTP: () => void;
 
     formData: {
         email: string;
         OTP: string;
-        name : string ;
+        password: string;
 
     };
     otpGiven: boolean;
@@ -20,11 +19,10 @@ const SingInForm: React.FC<SignUpFormProps> = ({
     handleSubmit,
     sendOTP,
     handleInput,
-    handleCheck,
     formData,
     otpGiven,
     loading,
-    maxAge =  false  }) => {
+    maxAge = false }) => {
     const [showPassword, setShowPassword] = useState(false);
     return (
         <form onSubmit={handleSubmit}>
@@ -46,16 +44,16 @@ const SingInForm: React.FC<SignUpFormProps> = ({
                 </div>
                 <div className="relative ">
                     <label className="absolute -top-2.5  left-2 bg-white px-1 text-xs text-gray-600">
-                        Name 
+                        Password
                     </label>
                     <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
+                        type="password"
+                        name="password"
+                        value={formData.password}
                         onChange={handleInput}
                         required
                         className="w-full h-[40px] border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter your email"
+                        placeholder="Enter your password"
                     />
                 </div>
                 {
@@ -96,17 +94,7 @@ const SingInForm: React.FC<SignUpFormProps> = ({
                 {
                     otpGiven && <div onClick={() => sendOTP()} className='text-blue-500 underline text-left cursor-pointer '> Resend OTP </div>
                 }
-                {
-                    otpGiven && <label className="flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            checked={maxAge}
-                            onChange={handleCheck}
-                        />
-                        <span>Remeber Me </span>
-                    </label>
-
-                }
+                
                 {
                     otpGiven &&
                     <button disabled={loading} type='submit' className='bg-blue-500 cursor-pointer  border border-blue-500 w-full text-white text-xl hover:bg-blue-700 transition duration-400 rounded-md h-[54px]'>{loading ? (
