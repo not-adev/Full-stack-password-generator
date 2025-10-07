@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectToDb } from '@/app/db-congigration/models/connect-to-bd'
 import { getIdFromToken } from '@/utils/getid'
-import { SavedPasswordModel } from '@/app/db-congigration/models/saved-pssword'
 import UserModel from '@/app/db-congigration/models/user-model'
 
 export async function GET(req: NextRequest) {

@@ -10,9 +10,7 @@ const Dashboard = () => {
   const [entries, setEntries] = useState([])
   const [form, setForm] = useState({ username: '', password: '' })
   const callErrorToast = (e: string) => toast.error(e, { position: 'top-center' })
-  const callSucessToast = (e: string) => toast.success(e, { position: 'top-center' })
-  const callToast = (e: string) => toast(e, { position: 'top-center', hideProgressBar: true })
-  const [showDialog, setShowDialog] = useState(false)
+   const [showDialog, setShowDialog] = useState(false)
   const [updateid, setUpdateid] = useState('')
 
   useEffect(() => {

@@ -4,11 +4,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
  * Mongoose user document interface
  */
 
-interface ISavedPassword {
-  site: string;
-  username: string;
-  password: string;
-}
+
 
 export interface IUser extends Document {
   email: string

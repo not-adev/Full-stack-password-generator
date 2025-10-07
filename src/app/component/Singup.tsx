@@ -1,5 +1,5 @@
 "use client"
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
@@ -29,8 +29,7 @@ const Sign_up = () => {
   const [loading, setLoading] = useState(false)
   const [otpGiven, setOtpGiven] = useState(false)
   const callErrorToast = (e: String) => toast.error(e, { position: "top-center", })
-  const callSucessToast = (e: String) => toast.success(e, { position: "top-center", })
-  const [formData, setFormData] = useState({
+   const [formData, setFormData] = useState({
     password: '',
     email: '',
     OTP: '',
@@ -40,7 +39,7 @@ const Sign_up = () => {
 
 
   const validate = () => {
-    const { password, email } = formData;
+    const { email } = formData;
 
     // Name must be at least 2 characters
 
@@ -206,7 +205,7 @@ const Sign_up = () => {
                 loading={loading}
 
                 sendOTP={sendOTP}
-                maxAge={true} />
+             />
 
 
 

@@ -25,8 +25,7 @@ const Sign_in = () => {
     const [loading, setLoading] = useState(false)
 
     const callErrorToast = (e: string) => toast.error(e, { position: 'top-center' })
-    const callSucessToast = (e: string) => toast.success(e, { position: 'top-center' })
-    const callToast = (e: string) => toast(e, { position: 'top-center' , hideProgressBar :true})
+ const callToast = (e: string) => toast(e, { position: 'top-center' , hideProgressBar :true})
     const [formData, setFormData] = useState({
         email: '',
         password: '',

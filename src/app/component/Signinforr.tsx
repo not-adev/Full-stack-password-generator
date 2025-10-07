@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 interface SignUpFormProps {
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -19,8 +19,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
   
     loading, }) => {
 
-    const [showPassword, setShowPassword] = useState(false);
-    return (
+  return (
         <form onSubmit={handleSubmit}>
             <div className="w-[359px] mx-auto mt-1 text-sm p-6 bg-white rounded-lg space-y-6 ">
 

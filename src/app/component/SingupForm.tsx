@@ -13,7 +13,7 @@ interface SignUpFormProps {
     };
     otpGiven: boolean;
     loading: boolean;
-    maxAge: boolean;
+   
 }
 const SingInForm: React.FC<SignUpFormProps> = ({
     handleSubmit,
@@ -22,7 +22,7 @@ const SingInForm: React.FC<SignUpFormProps> = ({
     formData,
     otpGiven,
     loading,
-    maxAge = false }) => {
+   }) => {
     const [showPassword, setShowPassword] = useState(false);
     return (
         <form onSubmit={handleSubmit}>

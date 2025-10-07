@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { CheckLogin } from './app/function-for-middlewre/checklogin'
 import { loggerMiddleware } from './app/function-for-middlewre/Logger'
 
 export function middleware(request: NextRequest) {
