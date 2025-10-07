@@ -19,7 +19,7 @@ const SignUpForm = React.lazy(() => {
 export interface ResFromApi {
   code: number;
   message: String;
-  redirect : string;
+  redirect: string;
 }
 
 
@@ -43,7 +43,7 @@ const Sign_up = () => {
     const { password, email } = formData;
 
     // Name must be at least 2 characters
-    
+
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim() || !emailRegex.test(email)) {
@@ -64,7 +64,7 @@ const Sign_up = () => {
   }
   const handleInput = (e: any) => {
     const { name, value } = e.target;
-   
+
     setFormData(prev => ({
       ...prev,
       [name]: value,
@@ -82,28 +82,28 @@ const Sign_up = () => {
       if (!otpGiven) {
         if (validate()) {
 
-          // toast.promise(
-          //   async () => {
-          //     const response = await axios.post('/api/otpVerification', {
-          //       email: formData.email,
-          //     })
+          toast.promise(
+            async () => {
+              const response = await axios.post('/api/otpVerification', {
+                email: formData.email,
+              })
 
-          //     // Extract data from response
-          //     const { otp } = response.data
+              // Extract data from response
+              const { otp } = response.data
 
-          //     // You can use this data for further logic if needed
-          //     console.log('OTP:', otp)
-          //     setOTP(otp)
+              // You can use this data for further logic if needed
+              console.log('OTP:', otp)
+              setOTP(otp)
 
-          //     return response.data
-          //   },
-          //   {
-          //     pending: 'Processing...',
-          //     success: 'OTP sent successfully 🎉',
-          //     error: 'OTP could not be sent ❌',
-          //   }
-          // )
-          setOTP('123')
+              return response.data
+            },
+            {
+              pending: 'Processing...',
+              success: 'OTP sent successfully 🎉',
+              error: 'OTP could not be sent ❌',
+            }
+          )
+
 
           setOtpGiven(true)
 
@@ -120,8 +120,8 @@ const Sign_up = () => {
             email: formData.email
 
           })
-       callErrorToast(res.data.message)
-       route.push(res.data.redirect)
+        callErrorToast(res.data.message)
+        route.push(res.data.redirect)
 
       }
 
@@ -174,7 +174,7 @@ const Sign_up = () => {
 
 
             <div className='text-2xl mb-4 md:mb-0 font-semibold' >
-              My Logo
+              Welcome
             </div>
           </div>
         </div>
@@ -204,13 +204,20 @@ const Sign_up = () => {
                 formData={formData}
                 otpGiven={otpGiven}
                 loading={loading}
-             
+
                 sendOTP={sendOTP}
                 maxAge={true} />
 
 
 
             </Suspense>
+
+             <div>
+                            Already have an account?{' '}
+                            <Link className="text-blue-500" href="/login">
+                                Login 
+                            </Link>
+                        </div>
 
 
 

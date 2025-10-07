@@ -90,8 +90,8 @@ const Sign_in = () => {
                 {/* Logo Section */}
                 <div className="flex md:absolute items-center bg-amb mt-4 md:mt-0 top-1 left-4 justify-center text-2xl font-bold">
                     <div className="flex justify-end items-center gap-4">
-                        <img src="logo.png" alt="img" className="w-[32px] h-[32px]" />
-                        <div className="text-2xl mb-4 md:mb-0 font-semibold">Hd</div>
+                        {/* <img src="logo.png" alt="img" className="w-[32px] h-[32px]" /> */}
+                        <div className="text-2xl mb-4 md:mb-0 font-semibold">welcome</div>
                     </div>
                 </div>
 
@@ -99,9 +99,9 @@ const Sign_in = () => {
                 <div className="w-[359px] md:h-[90%] m-auto relative flex flex-col justify-center items-center">
                     <div className="text-center flex flex-col">
                         <div>
-                            <div className="text-[30px] font-bold md:text-left px-6">Sign Up</div>
+                            <div className="text-[30px] font-bold md:text-left px-6">Login </div>
                             <div className="text-gray-400 pt-1 h-[27px] md:text-left px-6">
-                                Sign up to enjoy the feature of HD
+                                Login up to enjoy the feature 
                             </div>
                         </div>
 
@@ -124,7 +124,7 @@ const Sign_in = () => {
 
                         <div>
                             Already have an account?{' '}
-                            <Link className="text-blue-500" href="/signin">
+                            <Link className="text-blue-500" href="/signup">
                                 Sign In
                             </Link>
                         </div>

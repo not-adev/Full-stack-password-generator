@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { connectToDb } from '@/app/db-congigration/models/connect-to-bd'
 import { getIdFromToken } from '@/utils/getid'
 import { SavedPasswordModel } from '@/app/db-congigration/models/saved-pssword'
+import UserModel from '@/app/db-congigration/models/user-model'
 
 export async function GET(req: NextRequest) {
   await connectToDb()
@@ -17,8 +18,14 @@ export async function GET(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: 'Invalid token' }, { status: 403 })
   }
+const user = await UserModel.findById(userId).populate('SavedPasswords')
 
- const entries = await SavedPasswordModel.find({ user: userId })
-  .populate('user', 'email')
-  return NextResponse.json({ success: true, entries })
+if (!user) {
+  throw new Error('User not found')
+}
+
+const savedPasswords = user.SavedPasswords
+
+
+  return NextResponse.json({ success: true,entries :savedPasswords})
 }

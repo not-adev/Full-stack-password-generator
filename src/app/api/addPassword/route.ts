@@ -29,9 +29,10 @@ export async function POST(req: NextRequest) {
         user: userId,
     })
 
-    await UserModel.findByIdAndUpdate(userId, {
-        $push: { savedPasswords: newPassword._id },
-    })
+  await UserModel.findByIdAndUpdate(userId, {
+  $push: { SavedPasswords: newPassword._id }, // ✅ match casing
+})
+
 
     return NextResponse.json({ success: true, entry: newPassword })
 }

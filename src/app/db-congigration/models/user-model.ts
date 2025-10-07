@@ -11,9 +11,9 @@ interface ISavedPassword {
 }
 
 export interface IUser extends Document {
-  email: string;
-  password: string;
-  SavedPasswords: ISavedPassword[];
+  email: string
+  password: string
+  SavedPasswords: mongoose.Types.ObjectId[] // or: Types.ObjectId[]
 }
 const UserSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true, index: true },

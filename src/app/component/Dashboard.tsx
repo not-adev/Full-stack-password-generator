@@ -20,6 +20,7 @@ const Dashboard = () => {
       try {
         const res = await axios.get('/api/getPassword')
         if (res.data.success) {
+          console.log(res.data)
           setEntries(res.data.entries)
         } else {
           callErrorToast('ailed to fetch passwords')
@@ -35,26 +36,28 @@ const Dashboard = () => {
   }, [])
 
 
-  const fetchPasswords = async () => {
-    try {
-      const res = await axios.get('/api/getPassword')
-      if (res.data.success) {
-        setEntries(res.data.entries)
-      } else {
-        callErrorToast('ailed to fetch passwords')
-        console.error('Failed to fetch passwords:', res.data.error)
+ const fetchPasswords = async () => {
+      try {
+        const res = await axios.get('/api/getPassword')
+        if (res.data.success) {
+          console.log(res.data)
+          setEntries(res.data.entries)
+        } else {
+          callErrorToast('ailed to fetch passwords')
+          console.error('Failed to fetch passwords:', res.data.error)
+        }
+      } catch (error) {
+        callErrorToast('Error fetching passwords')
+        console.error('Error fetching passwords:', error)
       }
-    } catch (error) {
-      callErrorToast('Error fetching passwords')
-      console.error('Error fetching passwords:', error)
     }
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     toast.promise(
       async () => {
         await axios.post('/api/addPassword', { username: form.username, password: form.password })
+        fetchPasswords()
       },
       {
 
@@ -65,7 +68,7 @@ const Dashboard = () => {
     )
     // await axios.post('/api/addPassword', { username: form.username, password: form.password })
     setForm({ username: '', password: '' })
-    fetchPasswords()
+   
   }
 
 

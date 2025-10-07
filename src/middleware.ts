@@ -1,21 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { CheckLogin } from './app/function-for-middlewre/checklogin';
-import { loggerMiddleware } from './app/function-for-middlewre/Logger';
+import { NextRequest, NextResponse } from 'next/server'
+import { CheckLogin } from './app/function-for-middlewre/checklogin'
+import { loggerMiddleware } from './app/function-for-middlewre/Logger'
+
 export function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl
+  loggerMiddleware(request)
 
-    loggerMiddleware(request)
-     if (pathname.startsWith('/signup') || pathname === '/'  ) {
-        CheckLogin(request)
-    }
+  const token = request.cookies.get('token')?.value
 
-    return NextResponse.next();
+  // ✅ Redirect logged-in users from / or /signup to /dashboard
+  if ((pathname === '/' || pathname === '/signup') && token) {
+    console.log('User already logged in, redirecting to /dashboard')
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  // ✅ Redirect unauthenticated users from /dashboard to /login
+  if (pathname === '/dashboard' && !token) {
+    console.log('User not logged in, redirecting to /login')
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  return NextResponse.next()
+  
 }
 export const config = {
-   matcher: [
-    '/api/:path*',     // ✅ Match all API routes
-    '/signup',         // ✅ Match signup page
-    '/',               // ✅ Match root
-  ],
-
-};  
+  matcher: ['/', '/signup', '/dashboard'],
+}
