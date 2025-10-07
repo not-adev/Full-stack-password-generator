@@ -1,4 +1,5 @@
 "use client"
+import Image from 'next/image'
 import React, { Suspense, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -227,7 +228,7 @@ const Sign_up = () => {
 
 
         < div className="w-2/3 hidden  h-screen rounded-2xl p-1 bg-white md:flex items-center justify-center" >
-          <img
+          <Image
             src="https://i.pinimg.com/1200x/47/da/2d/47da2d09a9bb2394dd764adc789ab193.jpg"
             alt="Sample Image"
             className="max-w-full h-full object-cover rounded shadow-lg"
